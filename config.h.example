@@ -1,0 +1,22 @@
+// ============================================
+// config.h.example
+// --------------------------------------------
+// 1. Copy this file and rename it to "config.h"
+// 2. Fill in your real WiFi credentials and
+//    Google Apps Script URL below.
+// 3. config.h is listed in .gitignore, so your
+//    real secrets will NEVER be pushed to GitHub.
+// ============================================
+
+#ifndef CONFIG_H
+#define CONFIG_H
+
+// ========= WiFi Credentials =========
+const char* ssid     = "YOUR_WIFI_SSID";
+const char* password = "YOUR_WIFI_PASSWORD";
+
+// ========= Google Apps Script Web App URL =========
+// Deploy your Google Apps Script as a Web App and paste the URL here.
+const char* scriptURL = "YOUR_GOOGLE_APPS_SCRIPT_DEPLOYMENT_URL";
+
+#endif
