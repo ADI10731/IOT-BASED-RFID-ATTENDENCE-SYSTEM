@@ -117,4 +117,4 @@ Released under the [MIT License](LICENSE).
 
 ## 🙌 Author
 
-Built by **Rajat**
+Built by **Adithya R Kulkarni**
