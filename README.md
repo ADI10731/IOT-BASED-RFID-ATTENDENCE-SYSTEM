@@ -1,36 +1,43 @@
 # 📡 IoT-Based Smart Attendance System
 
-An automated attendance system built with **ESP32**, an **RFID reader**, an **I2C LCD**, and a **buzzer**, which logs each check-in/check-out event straight to a **Google Sheet** in real time.
+> Tap a card. Get logged. Never touch a paper register again.
 
-Students tap their RFID card once to check **IN** and tap again to check **OUT** — no manual registers, no app installs, no paperwork.
+An automated attendance system built with an **ESP32**, an **RFID reader**, an **I2C LCD**, and a **buzzer** — that logs every check-in and check-out straight to a **live Google Sheet**, in real time, with zero manual entry.
+
+Scan once to check **IN**. Scan again to check **OUT**. The LCD confirms your name, the buzzer gives you a beep of approval (or three angry beeps if your card isn't registered), and the sheet updates itself before you've even walked away.
+
+---
+
+## 🎬 See It In Action
+
+📊 **[Live Attendance Sheet →](https://docs.google.com/spreadsheets/d/1Zj-Y5Hd2nO7ANKTF43BUEZzYgxa1j9TEY9QSslNBZaA/edit?gid=0#gid=0)**
+
+Every scan from the hardware appears here automatically — timestamp, name, and status (IN/OUT).
 
 ---
 
 ## ✨ Features
 
-- 🔑 **RFID-based identification** using an MFRC522 reader/card set
-- 🔁 **Toggle logic** — first scan = Check-IN, next scan = Check-OUT
-- 📟 **16x2 I2C LCD display** shows the student's name and status
-- 🔊 **Buzzer feedback**
-  - Long beep → Checked IN
-  - Double beep → Checked OUT
-  - Triple beep → Unknown/unregistered card
-- ☁️ **Cloud logging** to Google Sheets via a Google Apps Script Web App (no external server or database needed)
-- 📶 Works over **WiFi** (ESP32 built-in)
+| | |
+|---|---|
+| 🔑 | **RFID identification** — every student gets a unique card, no typing, no passwords |
+| 🔁 | **Smart toggle logic** — first tap = IN, next tap = OUT, automatically |
+| 📟 | **16x2 I2C LCD** — shows the scanned student's name and live status |
+| 🔊 | **Buzzer feedback** — long beep (IN), double beep (OUT), triple beep (unknown card) |
+| ☁️ | **Instant cloud logging** — pushes straight to Google Sheets, no server or database required |
+| 📶 | **WiFi-native** — runs entirely on the ESP32's built-in WiFi, no extra modules |
 
 ---
 
-## 🛠️ Hardware Required
+## 🧰 Hardware Used
 
-| Component | Notes |
-|---|---|
-| ESP32 Dev Board | Main microcontroller |
-| MFRC522 RFID Reader + Cards/Tags | For scanning student IDs |
-| 16x2 I2C LCD Display | Address `0x27` (adjust in code if different) |
-| Active Buzzer | Audio feedback |
-| Jumper wires, breadboard/PCB | Wiring |
+- ESP32 Dev Board
+- MFRC522 RFID Reader + Cards/Tags
+- 16x2 I2C LCD Display
+- Active Buzzer
+- Jumper wires + breadboard/PCB
 
-### Wiring (as configured in code)
+### 🔌 Wiring
 
 | MFRC522 Pin | ESP32 Pin |
 |---|---|
@@ -45,76 +52,71 @@ Students tap their RFID card once to check **IN** and tap again to check **OUT**
 | Other | ESP32 Pin |
 |---|---|
 | Buzzer | GPIO 16 |
-| LCD SDA/SCL | Default I2C pins (GPIO 21 / GPIO 22) |
+| LCD SDA / SCL | GPIO 21 / GPIO 22 |
+
+For the full visual layout, check the diagrams included in this repo:
+
+📷 [`IOT BASED ATTENDENCE CIRCUIT DIAGRAM.jpg`](IOT%20BASED%20ATTENDENCE%20CIRCUIT%20DIAGRAM.jpg) — complete circuit schematic
+📷 [`IOT BASED ATTENDENCE CONNECTIONS.jpeg`](IOT%20BASED%20ATTENDENCE%20CONNECTIONS.jpeg) — physical wiring/connections photo
 
 ---
 
-## 📂 Project Structure
+## 📂 Repository Structure
 
 ```
-iot-attendance/
-├── src/
-│   ├── IOT_Based_Attendance_System.ino   # Main firmware
-│   └── config.h.example                  # Template for WiFi/Script secrets
-├── google-apps-script/
-│   └── Code.gs                           # Script that writes to Google Sheets
-├── .gitignore
-├── LICENSE
+IOT-BASED-RFID-ATTENDENCE-SYSTEM/
+├── IOT_BASED_RFID_ATTENDENCE_SYSTEM.ino     # Main ESP32 firmware
+├── IOT BASED ATTENDENCE CIRCUIT DIAGRAM.jpg # Circuit schematic
+├── IOT BASED ATTENDENCE CONNECTIONS.jpeg    # Physical wiring photo
+├── LICENSE                                  # MIT License
 └── README.md
 ```
 
 ---
 
-## 🚀 Setup Guide
+## 🚀 Getting Started
 
-### 1. Google Sheet + Apps Script
-1. Create a new Google Sheet.
-2. Go to **Extensions → Apps Script**.
-3. Paste the contents of [`google-apps-script/Code.gs`](google-apps-script/Code.gs).
-4. Click **Deploy → New deployment → Web app**.
-   - Execute as: **Me**
-   - Who has access: **Anyone**
-5. Copy the generated Web App URL — you'll need it in step 3 below.
+### 1. Set up the Google Sheet
+Use (or duplicate) the sheet linked above, and connect it to a Google Apps Script Web App that accepts `name` and `status` as GET parameters and appends them as a new row with a timestamp.
 
-### 2. Arduino IDE setup
-Install these libraries via **Library Manager**:
-- `MFRC522` by GithubCommunity
+### 2. Install Arduino libraries
+- `MFRC522` (by GithubCommunity)
 - `LiquidCrystal_I2C`
-- ESP32 board support (via Boards Manager URL, if not already installed)
+- ESP32 board support (via Boards Manager)
 
-### 3. Configure secrets
-1. In `src/`, copy `config.h.example` to a new file named `config.h`.
-2. Fill in your WiFi SSID/password and the Google Apps Script URL from step 1.
-3. `config.h` is already listed in `.gitignore`, so it will **never** be pushed to GitHub.
+### 3. Add your credentials
+Open `IOT_BASED_RFID_ATTENDENCE_SYSTEM.ino` and update:
+- Your WiFi SSID and password
+- Your Google Apps Script deployment URL
 
-### 4. Register your RFID cards
-1. Upload the sketch and open the Serial Monitor (115200 baud).
-2. Scan each card — its UID will print to the console.
-3. Update the `students[]` array in the `.ino` file with the real UIDs and names.
+> ⚠️ **Heads up:** if you fork or clone this repo, swap in your own WiFi credentials and Script URL before flashing — and avoid committing real credentials to a public repo.
 
-### 5. Upload and go
-Flash the sketch to your ESP32. On boot it connects to WiFi, shows a welcome screen, then prompts **"Scan your ID Card..."**.
+### 4. Register your cards
+Upload the sketch, open the Serial Monitor at `115200` baud, and scan each card to grab its UID. Drop those UIDs (and names) into the `students[]` array in the code.
 
----
-
-## 🔒 Security Note
-
-This repo keeps WiFi credentials and the Google Apps Script URL in a **local `config.h` file that is git-ignored**. Never commit real credentials to a public repository. If you've already pushed real secrets to GitHub, rotate your WiFi password and redeploy the Apps Script with a new URL, then scrub the old commit from history.
+### 5. Flash and scan
+Upload to your ESP32. On boot it connects to WiFi, shows a welcome screen, then waits for a scan. Tap a card and watch it show up on the [live sheet](https://docs.google.com/spreadsheets/d/1Zj-Y5Hd2nO7ANKTF43BUEZzYgxa1j9TEY9QSslNBZaA/edit?gid=0#gid=0) instantly.
 
 ---
 
-## 📸 Demo
+## 🧠 How It Works
 
-*(Add a photo or short video/GIF of the hardware setup here once uploaded.)*
+```
+ Card Tap → ESP32 reads UID → Match found in students[]?
+     │
+     ├── Yes → Toggle IN/OUT → Update LCD → Beep → Push to Google Sheets
+     │
+     └── No  → "Unknown Card!" on LCD → Triple beep
+```
 
 ---
 
 ## 📄 License
 
-Released under the [MIT License](LICENSE).
+Released under the [MIT License](LICENSE) — free to use, modify, and build on.
 
 ---
 
 ## 🙌 Author
 
-Built by **Adithya R Kulkarni**
+Built with ❤️ by **Adithya R Kulkarni**
